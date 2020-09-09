@@ -138,7 +138,7 @@ router.get('/new', middleware.isLoggedIn,(req,res)=>{
             req.flash('error', 'Sorry, that museum does not exist!');
             return res.redirect('/museums'); 
         }
-        res.render("museums/show",{museum:foundMuseum});
+        res.render("museums/show",{museum:foundMuseum,key:process.env.MUSEUMFEVER_API_KEY});
     }
     catch(err){
         req.flash('error', 'Sorry, that museum does not exist!');
