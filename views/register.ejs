@@ -1,0 +1,48 @@
+<%- include("./partials/header") %>
+<div class="row">
+    <h1 style="text-align: center">Sign Up</h1>
+    <div style="width: 30%; margin: 25px auto;">
+        <form action="/register" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input class="form-control" id="username"type="text" name="username" placeholder="username">
+            </div>
+            <div class="form-group">
+                <label for="firstname">First Name</label>
+                <input class="form-control" id="firstname"type="text" name="firstName" placeholder="First Name">
+            </div>
+            <div class="form-group">
+                <label for="lastname">Last Name</label>
+                <input class="form-control" id="lastname"type="text" name="lastName" placeholder="Last Name">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input class="form-control" id="email"type="email" name="email" placeholder="Email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input class="form-control" id="password" type="password" name="password" placeholder="Password">
+            </div>
+            <div class="form-group hideAdmin" id="adminInput">
+                <label for="adminCode">Admin. Code</label>
+                <input class="form-control" id="adminCode" type="password" name="adminCode" placeholder="Admin Code">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-lg btn-primary btn-block">Register</button>
+            </div>
+        </form>
+        <a href="/museums">Go Back</a>
+        <div class="showAdmin" >
+            <button class="btn btn-xs btn-primary" onclick="onButtonClick()">Register As Admin</button>
+        </div>
+    </div>
+</div>
+
+<script >
+    function onButtonClick(){
+        if(document.getElementById('adminInput').className === "form-group showAdmin") document.getElementById('adminInput').className="form-group hideAdmin";
+        else  document.getElementById('adminInput').className="form-group showAdmin";
+  }
+</script>
+
+<%- include("./partials/footer") %>

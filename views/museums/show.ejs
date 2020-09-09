@@ -1,0 +1,207 @@
+<%- include("../partials/header") %>
+
+
+    <div class="row">
+        <div class="col-md-3">
+            <p class="lead">Museum Fever</p>
+            <div id="map"></div>
+        </div>
+        <div class="col-md-9">
+            <div class="thumbnail">
+                <img class="img-responsive" src="<%= museum.image%>" alt="">
+                <div class="caption-full">
+                    <h4 class="pull-right">
+                        <% if(museum.price === "Free") {%> 
+                            <%= museum.price %>
+                        <% } else { %> 
+                            $<%= museum.price %>
+                        <% } %> 
+                    </h4>
+                    <h4><a href=""><%=museum.name%></a></h4>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-xs btn-primary" data-toggle="modal"
+                                data-target="#museumLikes">
+                            <span>Total likes: <i class="fas fa-thumbs-up"></i> <%= museum.likes.length %></span>
+                        </button>
+                    </div>
+                    <div style="padding-bottom: 10px;">
+                        <form action="/museums/<%= museum._id %>/like" method="POST">
+                            <div class="btn-group">
+                                <% if (currentUser && museum.likes.some(function (like) {
+                                    return like.equals(currentUser._id)
+                                })) { %>
+                                <button class="btn btn-sm btn-primary">
+                                    <i class="fas fa-thumbs-up"></i> Liked (<%= museum.likes.length %>)
+                                </button>
+                                <% } else { %>
+                                <button class="btn btn-sm btn-secondary">
+                                    <i class="fas fa-thumbs-up"></i> Like (<%= museum.likes.length %>)
+                                </button>
+                                <% } %>
+                                <button type="button" class="btn btn-sm btn-default" data-toggle="modal"
+                                        data-target="#museumLikes">See more details
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <p><%= museum.description%></p>
+                    <p>
+                        <em>Submitted By <a href="/users/<%=museum.author.id%>"><%=museum.author.username%></a> , <%= moment(museum.createdAt).fromNow() %></em> 
+                    </p>
+                    <% if(currentUser && museum.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) {%>
+                        <a class= "btn btn-warning" href="/museums/<%=museum._id%>/edit">Edit</a>
+                        <form class="delete-form" action="/museums/<%=museum._id%>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                   <% } %> 
+                </div>
+            </div>
+
+            <div class="thumbnail">
+                <div class="caption-full">
+                    <% if (museum.rating === 0) { %>
+                    <h5>
+                        <em>No reviews yet.</em>
+                    </h5>
+                    <% } else { %>
+                    <p>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star <% if (museum.rating > 1.5) { %> checked <% } %>"></span>
+                        <span class="fa fa-star <% if (museum.rating > 2.5) { %> checked <% } %>"></span>
+                        <span class="fa fa-star <% if (museum.rating > 3.5) { %> checked <% } %>"></span>
+                        <span class="fa fa-star <% if (museum.rating > 4.5) { %> checked <% } %>"></span>
+                        <em>(total reviews: <%= museum.reviews.length %>)</em>
+                    </p>
+                    <p>
+                        Current museum rating: <strong><%= museum.rating.toFixed(2) %></strong>
+                    </p>
+                    <p><h4>Latest reviews for this museum:</h4></p>
+                    <hr style="margin-top: 0;">
+                    <% museum.reviews.slice(0, 5).forEach(function(review){ %>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <%- '<span class="fa fa-star checked"></span>'.repeat(review.rating) %><%- '<span class="fa fa-star"></span>'.repeat(5 - review.rating) %>
+                            <div>Review by: <strong><%= review.author.username %></strong></div>
+                            <span><em><%= review.updatedAt.toDateString() %></em></span>
+                        </div>
+                        <div class="col-md-9">
+                            <p style="text-align: justify; word-wrap: break-word;">
+                                <%= review.text %>
+                            </p>
+                            <% if(currentUser && review.author.id.equals(currentUser._id)|| currentUser && currentUser.isAdmin){ %>
+                            <a class="btn btn-xs btn-warning"
+                               href="/museums/<%=museum._id %>/reviews/<%=review._id %>/edit">Edit</a>
+                            <form id="delete-form" action="/museums/<%=museum._id %>/reviews/<%=review._id %>?_method=DELETE" method="POST">
+                                <input type="submit" class="btn btn-xs btn-danger" value="Delete">
+                            </form>
+                            <% } %>
+                        </div>
+                    </div>
+                    <hr>
+                    <% }); %>
+                    <div style="margin-bottom: 10px;">
+                        <h4><a href="/museums/<%= museum._id %>/reviews"><i class="fa fa-search" aria-hidden="true"></i> See all reviews</a></h4>
+                    </div>
+                    <% } %>
+                    <div>
+                        <a class="btn btn-primary btn-lg <% if (currentUser && museum.reviews.some(function (review) {return review.author.id.equals(currentUser._id)})) { %> disabled <% } %>" href="/museums/<%= museum._id %>/reviews/new">
+                            Write a New Review</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="well">
+                <div class="text-right">
+                    <a class="btn btn-success" href="/museums/<%=museum._id%>/comments/new">Add New Comment</a>
+                </div>
+                <hr>
+                <% museum.comments.forEach(comment =>{%>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong><%= comment.author.username%></strong>
+                            <span class="pull-right"><%= moment(comment.createdAt).fromNow() %></span>
+                            <p>
+                                <%= comment.text%> 
+                            </p>
+                            <% if(currentUser && comment.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) {%>
+                                <a href="/museums/<%=museum._id%>/comments/<%= comment._id%>/edit" class="btn btn-xs btn-warning">Edit</a>
+                                <form class="delete-form" action="/museums/<%=museum._id%>/comments/<%= comment._id%>?_method=DELETE" method="POST">
+                                    <button class="btn btn-xs btn-danger">Delete</button>
+                                </form>
+                            <% } %> 
+                        </div>
+                    </div>
+                <%});%>
+            </div>
+        </div>
+    </div>
+    <!-- Museum Likes Modal -->
+    <div id="museumLikes" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Museum likes: <%= museum.likes.length %></h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Liked by:</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% museum.likes.forEach(function(like) { %>
+                            <tr>
+                                <td><span class="badge"><i class="fas fa-user"></i></span> <%= like.username %></td>
+                            </tr>
+                        <% }); %>
+                        <% if (museum.likes.length === 0) { %>
+                            <tr>
+                                <td><em>No likes yet.</em></td>
+                            </tr>
+                        <% } %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function initMap() {
+            const lat = <%=museum.lat%>;
+            const lng = <%=museum.lng%>;
+            const center = {lat: lat, lng: lng };
+            const map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 8,
+                center: center,
+                scrollwheel: false
+            });
+            const contentString = `
+            <strong><%= museum.name %><br />
+            <%= museum.location %></strong>
+            <p><%= museum.description %></p>
+            `
+            const infowindow = new google.maps.InfoWindow({
+            content: contentString
+            });
+            const marker = new google.maps.Marker({
+                position: center,
+                map: map
+            });
+            marker.addListener('click', function() {
+            infowindow.open(map, marker);
+            });
+            }
+      </script>
+      <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAmxh_j8dlf7aZUQTZgdLCN0D7m3zXy5I&callback=initMap"></script>
+
+      
+
+
+<%- include("../partials/footer") %>

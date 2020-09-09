@@ -1,0 +1,74 @@
+.thumbnail img{
+    width: 100%;
+    
+}
+
+.thumbnail{
+    padding: 0;
+
+}
+
+.thumbnail .caption-full{
+    padding: 9px;
+}
+
+.delete-form{
+    display: inline;
+}
+
+/* Google Maps */
+#map {
+    height: 400px;
+    width: 100%;
+}
+
+.hideAdmin{
+    display:none;
+}
+
+.showAdmin{
+    display:block;
+}
+
+.checked {
+    color: orange;
+}
+
+.userColumn{
+    margin: 0; 
+    padding: 0;
+}
+
+.userGeneratedMuseum{
+    margin: 20px;
+  
+}
+
+.userUL{
+    list-style-type: none;
+    width: 100%;
+}
+
+.userLI{
+    padding: 10px;
+    overflow: auto;
+}
+
+
+#userDescription{
+    font: 12px/1.5 Georgia, Times New Roman, serif;
+    
+}
+
+#userHeading{
+   
+    font: bold 20px/1.5 Helvetica, Verdana, sans-serif;
+  
+}
+
+.userIMG{
+    float: left;
+    width: 50%;
+    margin: 0 15px 0 0;
+
+}

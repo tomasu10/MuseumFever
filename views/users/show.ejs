@@ -1,0 +1,40 @@
+<%- include("../partials/header") %>
+        <div class="row">
+            <div class="col-md-3">
+                <h1><%= `${user.firstName.charAt(0).toUpperCase() + user.
+                    firstName.slice(1)} ${user.lastName.charAt(0).toUpperCase() + user.lastName.slice(1)}`  %>
+                </h1>
+                <div class="thumbnail">
+                    <img class="img-responsive" src="<%=user.avatar%>" alt="Profile Picture Not Found">
+                    <div class="caption">
+                        <%= user.email %>
+                    </div>
+                    <div class="caption">
+                        <%= user.bio %>
+                    </div>
+                    <% if(currentUser && user._id.equals(currentUser._id) || currentUser && currentUser.isAdmin) {%>
+                        <a class= "btn btn-warning" href="/users/<%=user._id%>/edit">Edit User</a>
+                   <% } %> 
+                </div>
+
+            </div>
+            <div class="col-md-9 userColumn">
+                
+                     <h3><%= user.username %>'s Museums</h3>
+                    <ul class= "userUL">
+                        <% museums.forEach(museum => { %>
+                            <li class="userLI">
+                                <img class = "img-responsive userIMG" src="<%=museum.image%>" alt="">
+                               <h2 id="userHeading"><a href="/museums/<%= museum.id %> "><%= museum.name %> </a></h2>  
+                               <p id="userDescription"><%= museum.description.substring(0,500)%>...</p>
+                            </li>
+                            <hr>
+                           
+                        <% }); %>
+                    </ul>
+            </div>
+
+         
+        </div>
+    
+<%- include("../partials/footer") %>
