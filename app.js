@@ -80,7 +80,8 @@ app.use(indexRoutes);
 
 
 
-//Start Server on PORT 3000
-app.listen(3000,function(){
-    console.log("MuseumFever Server has started on port 3000");
+//Start Server
+const port = process.env.PORT || 3000;
+app.listen(port, function () {
+  console.log("Server Has Started!");
 });
