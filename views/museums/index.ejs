@@ -24,7 +24,7 @@
             <% museums.forEach(museum => {%>
                 <div class= "col-md-3 col-sm-6">
                     <div class="thumbnail">
-                        <img class= "img-responsive index-img" src="<%= museum.image %>">
+                        <img class= "img-responsive" src="<%= museum.image %>">
                         <div class="caption">
                             <h4><%= museum.name %></h4> 
                             <% if (museum.rating === 0) { %>
