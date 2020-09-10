@@ -22,7 +22,7 @@ indexRoutes = require('./routes/index');
 
 
 //Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/museumfever_v1', {
+mongoose.connect(`mongodb+srv://tomasu_10:${process.env.MONGO_PW}@cluster0.0qrgj.mongodb.net/<dbname>?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false
