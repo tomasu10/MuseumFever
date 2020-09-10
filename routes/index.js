@@ -54,7 +54,6 @@ router.post('/register',async (req,res)=>{
         const newUser = await User.register(username,req.body.password);
         await passport.authenticate("local")(req,res,()=>{
             req.flash("success",`Welcome to YelpCamp ${newUser.username}`);
-            console.log(username);
             res.redirect("/museums");
         });
     }
@@ -110,7 +109,7 @@ router.get("/users/:id",async (req,res)=>{
     }
 });
 
-//EDIT: Render CaEdit Form
+//EDIT: Render User Edit Form
 router.get('/users/:id/edit',middleware.isLoggedIn,middleware.checkUser,(req,res)=>{
     res.render('users/edit',{user:req.user});
 });

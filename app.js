@@ -22,7 +22,16 @@ indexRoutes = require('./routes/index');
 
 
 //Connect to MongoDB
-mongoose.connect(`mongodb+srv://tomasu_10:${process.env.MONGO_PW}@cluster0.0qrgj.mongodb.net/<dbname>?retryWrites=true&w=majority`, {
+//Local Use
+// mongoose.connect('mongodb://localhost:27017/museumfever_v1', {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+//   useFindAndModify: false
+// })
+// .then(() => console.log('Connected to DB!'))
+// .catch(error => console.log(error.message));
+//Production
+mongoose.connect(`mongodb+srv://tomasu_10:${process.env.MONGO_PW}@cluster0.0qrgj.mongodb.net/museumfever?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false
@@ -82,6 +91,6 @@ app.use(indexRoutes);
 
 //Start Server
 const port = process.env.PORT || 3000;
-app.listen(port, function () {
+app.listen(3000, function () {
   console.log("Server Has Started!");
 });
