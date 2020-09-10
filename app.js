@@ -31,7 +31,7 @@ indexRoutes = require('./routes/index');
 // .then(() => console.log('Connected to DB!'))
 // .catch(error => console.log(error.message));
 //Production
-mongoose.connect(process.env.MONGODB_URL, {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false
