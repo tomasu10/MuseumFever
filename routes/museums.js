@@ -1,11 +1,14 @@
+//Set up express
 const express = require('express');
 const router = express.Router();
+//Set up Models
 const Museum = require('../models/museum');
 const Comment = require('../models/comment');
 const Review = require("../models/review");
 const middleware = require('../middleware');
 //Node-Geocoder
 const NodeGeocoder = require('node-geocoder');
+//Multer for images
 const multer = require('multer');
 const storage = multer.diskStorage({
   filename: function(req, file, callback) {
@@ -15,13 +18,15 @@ const storage = multer.diskStorage({
 const imageFilter = function (req, file, cb) {
     // accept image files only
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
-        return cb(new Error('Only image files are allowed!'), false);
+        req.fileValidationError = "Only image (jpg,jpeg,png,gif) files are allowed!";
+        return cb(null,false,req.fileValidationError);
     }
     cb(null, true);
 };
 const upload = multer({ storage: storage, fileFilter: imageFilter})
 
 const cloudinary = require('cloudinary');
+const { nextTick } = require('async');
 cloudinary.config({ 
   cloud_name: 'codingexercises', 
   api_key: process.env.CLOUDINARY_API_KEY, 
@@ -76,6 +81,10 @@ router.get('/',async (req,res)=>{
 router.post("/", middleware.isLoggedIn, upload.single('image'), (req,res)=>{
    //Get data from form and add to museums array
     //Create a new museum and save to db
+        if(req.fileValidationError){
+            req.flash("error",req.fileValidationError);
+            return res.redirect('back');
+        }
         cloudinary.v2.uploader.upload(req.file.path, async (err,result)=> {
             if(err){
                 req.flash("error",err.message);
@@ -155,6 +164,11 @@ router.get('/:id/edit',middleware.isLoggedIn,middleware.checkUserMuseum,async (r
 router.put('/:id',middleware.checkMuseumOwnership,upload.single('image'),(req,res)=>{
     //Find and update correct museum
     Museum.findById(req.params.id,async (err,museum)=>{
+        //Check if image if of correct file type
+        if(req.fileValidationError){
+            req.flash("error",req.fileValidationError);
+            return res.redirect('back');
+        }
         //Check is image was submitted by user
         if(req.file){
             try{
