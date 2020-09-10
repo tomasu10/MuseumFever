@@ -31,7 +31,7 @@ indexRoutes = require('./routes/index');
 // .then(() => console.log('Connected to DB!'))
 // .catch(error => console.log(error.message));
 //Production
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/museumfever_v1", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false
@@ -91,7 +91,6 @@ app.use(indexRoutes);
 
 //Start Server
 const port = process.env.PORT || 3000;
-console.log(process.env.IP);
 app.listen(port,process.env.IP, function () {
   console.log("Server Has Started!");
 });
