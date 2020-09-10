@@ -53,7 +53,7 @@ router.post('/register',async (req,res)=>{
         }
         const newUser = await User.register(username,req.body.password);
         await passport.authenticate("local")(req,res,()=>{
-            req.flash("success",`Welcome to YelpCamp ${newUser.username}`);
+            req.flash("success",`Welcome to Museum Fever ${newUser.username}`);
             res.redirect("/museums");
         });
     }
