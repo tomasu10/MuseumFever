@@ -14,80 +14,84 @@
                     <form action= '/museums'method="GET" class= "form-inline">
                         <div class="form-group">
                             <input type="text" name="search" placeholder = "Museum Search..." class= "form-control">
-                            <button class= "btn btn-default">Submit</button>
+                            <button class= "btn btn-success ml-1">Submit</button>
                         </div>
                     </form>
                 </p>
             </div>
         </header>
-        <div class="row text-center" style= "display:flex; flex-wrap: wrap">
+        <div class="row text-center" >
             <% museums.forEach(museum => {%>
-                <div class= "col-md-3 col-sm-6">
-                    <div class="thumbnail">
-                        <img class= "img-responsive" src="<%= museum.image %>">
-                        <div class="caption">
-                            <h4><%= museum.name %></h4> 
-                            <% if (museum.rating === 0) { %>
-                                <em>No reviews yet.</em>
+                <div class= "col-md-3 col-sm-6 mb-4">
+                    <div class="card h-100">
+                        <img src="<%= museum.image %>" class="card-img-top museumIndexImg" alt="<%= museum.name %>">
+                        <div class="card-body">
+                          <h5 class="card-title"><%= museum.name %></h5>
+                          <hr class="mb-0 mt-0">
+                          <div class="mb-2">
+                                <!-- Check Museum rating and toggle checked class if rating is created than given values  -->
+                                <% if (museum.rating === 0) { %>
+                                    <em>No reviews yet.</em>
                                 <% } else { %>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star <% if (museum.rating > 1.5) { %> checked <% } %>"></span>
-                                <span class="fa fa-star <% if (museum.rating > 2.5) { %> checked <% } %>"></span>
-                                <span class="fa fa-star <% if (museum.rating > 3.5) { %> checked <% } %>"></span>
-                                <span class="fa fa-star <% if (museum.rating > 4.5) { %> checked <% } %>"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star <% if (museum.rating > 1.5) { %> checked <% } %>"></span>
+                                    <span class="fa fa-star <% if (museum.rating > 2.5) { %> checked <% } %>"></span>
+                                    <span class="fa fa-star <% if (museum.rating > 3.5) { %> checked <% } %>"></span>
+                                    <span class="fa fa-star <% if (museum.rating > 4.5) { %> checked <% } %>"></span>
                                 <% } %>
+                          </div>
+                          <a href="/museums/<%= museum._id%>" class="btn btn-primary">More Info</a>
                         </div>
-                        <p>
-                            <a href="/museums/<%= museum._id%>" class= "btn btn-primary">More Info</a>
-                        </p>
-                    </div>
+                      </div>
                 </div>
+
             <%});%>
         </div>
-        <div class="row text-center">
+        <!--Bootstap 4 Pagination-->
+        <nav aria-label="Page navigation">
             <% if (pages && pages > 0) { %>
-            <ul class="pagination text-center">
+            <ul class="pagination justify-content-center">
                 <% if (current == 1) { %>
-                <li class="disabled"><a>First</a></li>
+                <li class="page-item disabled"><a class="page-link">First</a></li>
                 <% } else { %>
-                <li><a href="/museums">First</a></li>
+                <li><a class="page-link" href="/museums">First</a></li>
                 <% } %>
          
                 <% if (current == 1) { %>
-                <li class="disabled"><a>«</a></li>
+                <li class="page-item disabled"><a class="page-link">«</a></li>
                 <% } else { %>
-                <li><a href="/museums?page=<%= Number(current) - 1 %>">«</a></li>
+                <li><a class="page-link" href="/museums?page=<%= Number(current) - 1 %>">«</a></li>
                 <% } %>
          
                 <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
                 <% if (i !== 1) { %>
-                <li class="disabled"><a>...</a></li>
+                <li class="page-item disabled"><a class="page-link">...</a></li>
                 <% } %>
                 <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
                 <% if (i == current) { %>
-                <li class="active"><a><%= i %></a></li>
+                <li class="active"><a class="page-link"><%= i %></a></li>
                 <% } else { %>
-                <li><a href="/museums?page=<%= i %>"><%= i %></a></li>
+                <li><a class="page-link" href="/museums?page=<%= i %>"><%= i %></a></li>
                 <% } %>
                 <% if (i == Number(current) + 4 && i < pages) { %>
-                <li class="disabled"><a>...</a></li>
+                <li class="page-item disabled"><a class="page-link">...</a></li>
                 <% } %>
                 <% } %>
          
                 <% if (current == pages) { %>
-                <li class="disabled"><a>»</a></li>
+                <li class="page-item disabled"><a class="page-link">»</a></li>
                 <% } else { %>
-                <li><a href="/museums?page=<%= Number(current) + 1 %>">»</a></li>
+                <li><a class="page-link" href="/museums?page=<%= Number(current) + 1 %>">»</a></li>
                 <% } %>
          
                 <% if (current == pages) { %>
-                <li class="disabled"><a>Last</a></li>
+                <li class="page-item disabled"><a class="page-link">Last</a></li>
                 <% } else { %>
-                <li><a href="/museums?page=<%= pages %>">Last</a></li>
+                <li><a class="page-link" href="/museums?page=<%= pages %>">Last</a></li>
                 <% } %>
             </ul>
             <% } %>
-        </div>
+        </nav>
 
     
 

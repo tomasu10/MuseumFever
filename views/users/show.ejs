@@ -4,13 +4,13 @@
                 <h1><%= `${user.firstName.charAt(0).toUpperCase() + user.
                     firstName.slice(1)} ${user.lastName.charAt(0).toUpperCase() + user.lastName.slice(1)}`  %>
                 </h1>
-                <div class="thumbnail">
-                    <img class="img-responsive" src="<%=user.avatar%>" alt="Profile Picture Not Found">
-                    <div class="caption">
-                        <%= user.email %>
-                    </div>
-                    <div class="caption">
-                        <%= user.bio %>
+                <div class="card">
+                    <img src="<%=user.avatar%>" class="card-img-top" alt="Profile Picture Not Found">
+                    <div class="card-body">
+                      <p class="card-text"> <%= user.email %>.</p>
+                      <hr>
+                      <p class="card-text"> <%= user.bio %>.</p>
+                
                     </div>
                     <% if(currentUser && user._id.equals(currentUser._id) || currentUser && currentUser.isAdmin) {%>
                         <a class= "btn btn-warning" href="/users/<%=user._id%>/edit">Edit User</a>
@@ -18,20 +18,32 @@
                 </div>
 
             </div>
-            <div class="col-md-9 userColumn">
+            <div class="col-md-9">
                 
                      <h3><%= user.username %>'s Museums</h3>
-                    <ul class= "userUL">
-                        <% museums.forEach(museum => { %>
-                            <li class="userLI">
-                                <img class = "img-responsive userIMG" src="<%=museum.image%>" alt="">
-                               <h2 id="userHeading"><a href="/museums/<%= museum.id %> "><%= museum.name %> </a></h2>  
-                               <p id="userDescription"><%= museum.description.substring(0,500)%>...</p>
-                            </li>
-                            <hr>
-                           
-                        <% }); %>
-                    </ul>
+      
+                    <% museums.forEach(museum => { %>
+                        <div class="card mb-3" >
+                            <div class="row no-gutters">
+                              <div class="col-md-4">
+                                <img src="<%=museum.image%>" class="card-img" alt="Museum Image Not Found">
+                              </div>
+                              <div class="col-md-8">
+                                <div class="card-body">
+                                  <h5 class="card-title">
+                                      <a href="/museums/<%= museum.id %> "><%= museum.name %> </a>
+                                </h5>
+                                  <p class="card-text"><%= museum.description.substring(0,500)%>...</p>
+                                  <p class="card-text"><small class="text-muted"><%= moment(museum.createdAt).fromNow() %></small></p>
+                                </div>
+                              </div>
+                            </div>
+                        </div> 
+                       
+                    <% }); %>
+
+
+   
             </div>
 
          

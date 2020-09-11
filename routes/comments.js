@@ -1,3 +1,4 @@
+//Import required packages
 const express = require('express');
 const router = express.Router({mergeParams: true});
 const Museum = require('../models/museum');

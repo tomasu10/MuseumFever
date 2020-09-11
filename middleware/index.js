@@ -1,10 +1,13 @@
+//Import require packages
 const Museum = require("../models/museum"),
 Comment   = require("../models/comment"),
 User  = require("../models/user"),
 Review = require("../models/review");
 
-
+//Create middleware object
 const middlewareObj = {};
+
+//Check if user is logged in
 middlewareObj.isLoggedIn = function(req,res,next){
     if(req.isAuthenticated()){
         return next();
@@ -12,6 +15,7 @@ middlewareObj.isLoggedIn = function(req,res,next){
     req.flash("error","You need to be logged in to do that");
     res.redirect("/login");
 }
+
 
 middlewareObj.checkMuseumOwnership = async function(req,res,next){
     //Check if user is logged in
@@ -23,6 +27,7 @@ middlewareObj.checkMuseumOwnership = async function(req,res,next){
             if(foundMuseum.author.id.equals(req.user._id) || req.user.isAdmin){
                 next();
             }else{
+                //If user does not match user restrict action
                 req.flash("error","You don't have permission to do that");
                 res.redirect('back');
             }
@@ -120,10 +125,12 @@ middlewareObj.checkUser = async function(req,res,next){
             res.redirect('/museums');
         }
         else if(foundUser._id.equals(req.user._id) || req.user.isAdmin){
+            //If user and owner are the same assign foundUser within req
             req.user = foundUser;
             next();
         }
         else{
+            //Restrict action if users do not match
             req.flash('error', 'You don\'t have permission to do that!');
             res.redirect('/users/' + req.params.id);
         }
@@ -136,12 +143,15 @@ middlewareObj.checkUser = async function(req,res,next){
 
 middlewareObj.checkUserComment = async function(req,res,next){
     try{
+        //Find desired comment
         const foundComment = await Comment.findById(req.params.comment_id);
         if(!foundComment){
+            //If no comment found restrict action 
             req.flash('error', 'Sorry, that comment does not exist!');
             res.redirect('/museums');
         }
         else if(foundComment.author.id.equals(req.user._id) || req.user._id){
+            //If user is owner of comment assign foundComment within req
             req.comment = foundComment;
             next();
         }

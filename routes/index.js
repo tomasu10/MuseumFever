@@ -1,3 +1,4 @@
+//Import Required Packages
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
@@ -7,21 +8,25 @@ const async = require('async');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const middleware = require('../middleware');
+//Multer allows image file type filter
 const multer = require('multer');
+//Storage Variable for multer
 const storage = multer.diskStorage({
   filename: function(req, file, callback) {
     callback(null, Date.now() + file.originalname);
   }
 });
+//ImageFilter for multer
 const imageFilter = function (req, file, cb) {
     // accept image files only
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
-        return cb(new Error('Only image files are allowed!'), false);
+        req.fileValidationError = "Only image (jpg,jpeg,png,gif) files are allowed!";
+        return cb(null,false,req.fileValidationError);
     }
     cb(null, true);
 };
 const upload = multer({ storage: storage, fileFilter: imageFilter})
-
+//Configure Cloudinary
 const cloudinary = require('cloudinary');
 cloudinary.config({ 
   cloud_name: 'codingexercises', 
@@ -118,6 +123,11 @@ router.get('/users/:id/edit',middleware.isLoggedIn,middleware.checkUser,(req,res
 router.put('/users/:id',middleware.checkOwnership,upload.single('image'),(req,res)=>{
 //Find and update correct museum
 User.findById(req.params.id,async (err,user)=>{
+     //Check if image if of correct file type
+     if(req.fileValidationError){
+        req.flash("error",req.fileValidationError);
+        return res.redirect('back');
+    }
     //Check is image was submitted by user
     if(req.file){
         try{

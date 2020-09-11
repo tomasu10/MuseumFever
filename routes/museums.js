@@ -24,7 +24,7 @@ const imageFilter = function (req, file, cb) {
     cb(null, true);
 };
 const upload = multer({ storage: storage, fileFilter: imageFilter})
-
+//Configure Cloudinary
 const cloudinary = require('cloudinary');
 const { nextTick } = require('async');
 cloudinary.config({ 
@@ -32,7 +32,7 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY, 
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
- 
+//Configure Geocoder API
 const options = {
   provider: 'google',
   httpAdapter: 'https',

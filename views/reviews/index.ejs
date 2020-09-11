@@ -2,11 +2,12 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <h1 style="text-align: center">Review Page: <%= museum.name %></h1>
+        <div class="col-md-12 ">
+            <h1 class="text-center">Review Page: <%= museum.name %></h1>
             <a href="/museums/<%= museum._id %>">Go back to the museum page</a>
-            <div class="thumbnail">
-                <div class="caption-full">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Populate stars on screen to correspoding rating -->
                     <% if (museum.rating === 0) { %>
                     <h5>
                         <em>No reviews yet.</em>
@@ -20,11 +21,13 @@
                         <span class="fa fa-star <% if (museum.rating > 4.5) { %> checked <% } %>"></span>
                         <em>(total reviews: <%= museum.reviews.length %>)</em>
                     </p>
+                    <!-- Truncate rating to two decimal points -->
                     <p>
                         Current museum rating: <strong><%= museum.rating.toFixed(2) %></strong>
                     </p>
                     <p><h4>All reviews for this museum:</h4></p>
-                    <hr style="margin-top: 0;">
+                    <hr class="mt-0">
+                    <!-- Display all reviews -->
                     <% museum.reviews.forEach(function(review){ %>
                     <div class="row">
                         <div class="col-md-3">
@@ -33,14 +36,15 @@
                             <span><em><%= review.updatedAt.toDateString() %></em></span>
                         </div>
                         <div class="col-md-9">
-                            <p style="text-align: justify; word-wrap: break-word;">
+                            <p class="reviewText">
                                 <%= review.text %>
                             </p>
-                            <% if(currentUser && review.author.id.equals(currentUser._id)){ %>
-                            <a class="btn btn-xs btn-warning"
+                            <!-- If Owner is current user allow to edi or delete -->
+                            <% if(currentUser && review.author.id.equals(currentUser._id)||currentUser && currentUser.isAdmin){ %>
+                            <a class="btn btn-sm btn-warning"
                                href="/museums/<%=museum._id %>/reviews/<%=review._id %>/edit">Edit</a>
                             <form id="delete-form" action="/museums/<%=museum._id %>/reviews/<%=review._id %>?_method=DELETE" method="POST">
-                                <input type="submit" class="btn btn-xs btn-danger" value="Delete">
+                                <input type="submit" class="btn btn-sm btn-danger" value="Delete">
                             </form>
                             <% } %>
                         </div>
@@ -48,18 +52,18 @@
                     <hr>
                     <% }); %>
                     <% } %>
+                    <!-- Check to see if user already submitted a review -->
                     <div>
                         <a class="btn btn-primary <% if (currentUser && museum.reviews.some(function (review) {return review.author.id.equals(currentUser._id)})) { %> disabled <% } %>" href="/museums/<%= museum._id %>/reviews/new">
                             Write a New Review</a>
                     </div>
                     <div style="margin-top: 10px;">
-                        <a class="btn btn-default" href="/museums/<%= museum._id %>"><i class="fa fa-arrow-left"></i> Go back</a>
+                        <a class="btn btn-outline-secondary" href="/museums/<%= museum._id %>"><i class="fa fa-arrow-left"></i> Go back</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--Review section-->
 </div>
 
 

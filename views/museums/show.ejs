@@ -2,63 +2,62 @@
 
 
     <div class="row">
+        <!-- Google Maps -->
         <div class="col-md-3">
-            <p class="lead">Museum Fever</p>
             <div id="map"></div>
         </div>
         <div class="col-md-9">
-            <div class="thumbnail">
-                <img class="img-responsive" src="<%= museum.image%>" alt="">
-                <div class="caption-full">
-                    <h4 class="pull-right">
+            <div class="card mb-3">
+                <!-- Museum Information -->
+                <img class="card-img-top" src="<%= museum.image%>" alt="<%= museum.name%>">
+                <div class="card-body">
+                    <h4 class="float-right">
                         <% if(museum.price === "Free") {%> 
                             <%= museum.price %>
                         <% } else { %> 
                             $<%= museum.price %>
                         <% } %> 
                     </h4>
-                    <h4><a href=""><%=museum.name%></a></h4>
-                    <div class="pull-right">
-                        <button type="button" class="btn btn-xs btn-primary" data-toggle="modal"
+                    <h4 class="card-title"><a href=""><%=museum.name%></a></h4>
+                    <div class="float-right">
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
                                 data-target="#museumLikes">
                             <span>Total likes: <i class="fas fa-thumbs-up"></i> <%= museum.likes.length %></span>
-                        </button>
+                        </button>    
                     </div>
-                    <div style="padding-bottom: 10px;">
+                    <div class="pb-10">
                         <form action="/museums/<%= museum._id %>/like" method="POST">
                             <div class="btn-group">
                                 <% if (currentUser && museum.likes.some(function (like) {
                                     return like.equals(currentUser._id)
                                 })) { %>
-                                <button class="btn btn-sm btn-primary">
-                                    <i class="fas fa-thumbs-up"></i> Liked (<%= museum.likes.length %>)
-                                </button>
+                                    <button class="btn btn-sm btn-primary">
+                                        <i class="fas fa-thumbs-up"></i> Liked (<%= museum.likes.length %>)
+                                    </button>
                                 <% } else { %>
-                                <button class="btn btn-sm btn-secondary">
-                                    <i class="fas fa-thumbs-up"></i> Like (<%= museum.likes.length %>)
-                                </button>
+                                    <button class="btn btn-sm btn-secondary">
+                                        <i class="fas fa-thumbs-up"></i> Like (<%= museum.likes.length %>)
+                                    </button>
                                 <% } %>
-                                <button type="button" class="btn btn-sm btn-default" data-toggle="modal"
-                                        data-target="#museumLikes">See more details
-                                </button>
                             </div>
                         </form>
                     </div>
-                    <p><%= museum.description%></p>
+                    <hr>
+                    <p class="card-text mt-2"><%= museum.description%></p>
                     <p>
                         <em>Submitted By <a href="/users/<%=museum.author.id%>"><%=museum.author.username%></a> , <%= moment(museum.createdAt).fromNow() %></em> 
                     </p>
                     <% if(currentUser && museum.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) {%>
-                        <a class= "btn btn-warning" href="/museums/<%=museum._id%>/edit">Edit</a>
+                        <a class= "btn btn-sm btn-warning" href="/museums/<%=museum._id%>/edit">Edit</a>
                         <form class="delete-form" action="/museums/<%=museum._id%>?_method=DELETE" method="POST">
-                            <button class="btn btn-danger">Delete</button>
+                            <button class="btn btn-sm btn-danger">Delete</button>
                         </form>
                    <% } %> 
                 </div>
             </div>
-
-            <div class="thumbnail">
-                <div class="caption-full">
+            <!-- Museum Rating-->
+            <div class="card mb-3">
+                <div class="card-body">
                     <% if (museum.rating === 0) { %>
                     <h5>
                         <em>No reviews yet.</em>
@@ -85,21 +84,21 @@
                             <span><em><%= review.updatedAt.toDateString() %></em></span>
                         </div>
                         <div class="col-md-9">
-                            <p style="text-align: justify; word-wrap: break-word;">
+                            <p class="reviewText">
                                 <%= review.text %>
                             </p>
                             <% if(currentUser && review.author.id.equals(currentUser._id)|| currentUser && currentUser.isAdmin){ %>
-                            <a class="btn btn-xs btn-warning"
+                            <a class="btn btn-sm btn-warning"
                                href="/museums/<%=museum._id %>/reviews/<%=review._id %>/edit">Edit</a>
                             <form id="delete-form" action="/museums/<%=museum._id %>/reviews/<%=review._id %>?_method=DELETE" method="POST">
-                                <input type="submit" class="btn btn-xs btn-danger" value="Delete">
+                                <input type="submit" class="btn btn-sm btn-danger" value="Delete">
                             </form>
                             <% } %>
                         </div>
                     </div>
                     <hr>
                     <% }); %>
-                    <div style="margin-bottom: 10px;">
+                    <div class="mb-10">
                         <h4><a href="/museums/<%= museum._id %>/reviews"><i class="fa fa-search" aria-hidden="true"></i> See all reviews</a></h4>
                     </div>
                     <% } %>
@@ -109,29 +108,38 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="well">
-                <div class="text-right">
-                    <a class="btn btn-success" href="/museums/<%=museum._id%>/comments/new">Add New Comment</a>
-                </div>
-                <hr>
-                <% museum.comments.forEach(comment =>{%>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <strong><%= comment.author.username%></strong>
-                            <span class="pull-right"><%= moment(comment.createdAt).fromNow() %></span>
-                            <p>
-                                <%= comment.text%> 
-                            </p>
-                            <% if(currentUser && comment.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) {%>
-                                <a href="/museums/<%=museum._id%>/comments/<%= comment._id%>/edit" class="btn btn-xs btn-warning">Edit</a>
-                                <form class="delete-form" action="/museums/<%=museum._id%>/comments/<%= comment._id%>?_method=DELETE" method="POST">
-                                    <button class="btn btn-xs btn-danger">Delete</button>
-                                </form>
-                            <% } %> 
-                        </div>
+            <!--Museum Comments-->
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-right">
+                        <a class="btn btn-success" href="/museums/<%=museum._id%>/comments/new">Add New Comment</a>
                     </div>
-                <%});%>
+                    <hr>
+                    <div class="row">
+                        <% museum.comments.forEach(comment =>{%>
+                            <div class="col-md-12 mb-2">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="float-left">
+                                            <p class="card-title"><strong><%= comment.author.username%></strong></p>
+                                            <p class="card-text"> <%= comment.text%> </p>
+                                        </div>
+                                        <div class="float-right">
+                                            <p><%= moment(comment.createdAt).fromNow() %></p>
+                                            <% if(currentUser && comment.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) {%>
+                                                <a  href="/museums/<%=museum._id%>/comments/<%= comment._id%>/edit" class="btn btn-sm btn-warning">Edit</a>
+                                                <form class="delete-form " action="/museums/<%=museum._id%>/comments/<%= comment._id%>?_method=DELETE" method="POST">
+                                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                                </form>
+                                            <% } %> 
+                                        </div>  
+                                    </div>
+                                </div>
+                            </div>
+                        <%});%>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -171,7 +179,8 @@
             </div>
         </div>
     </div>
-
+    
+    <!--Google Maps Script-->
     <script>
         function initMap() {
             const lat = <%=museum.lat%>;
