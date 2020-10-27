@@ -53,7 +53,7 @@ router.get('/register',(req,res)=>{
 router.post('/register',async (req,res)=>{
     try{
         const username = new User({username:req.body.username,firstName:req.body.firstName,lastName: req.body.lastName,email:req.body.email});
-        if(req.body.adminCode === '7Mr5wDrp?ZnB5Y2_'){
+        if(req.body.adminCode === process.env.ADMIN_CODE){
             username.isAdmin =  true;
         }
         const newUser = await User.register(username,req.body.password);
